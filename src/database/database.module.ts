@@ -1,28 +1,17 @@
 import { Module } from '@nestjs/common';
 import { Pool } from 'pg';
-import configuration, { PG_CONNECTION } from '../config/configuration';
-import { ConfigService } from '@nestjs/config';
+import { PG_CONNECTION } from '../config/configuration';
 
-let config = new ConfigService();
-console.log(config);
 const dbProvider = {
   provide: PG_CONNECTION,
   useValue: new Pool({
-    user: 'vvyswtkj',
-    host: 'kandula.db.elephantsql.com',
-    database: 'vvyswtkj',
-    password: 'n7qAXaPsRpgT_yNKBv5DjzFCnBzzgbS9',
+    user: 'postgres',
+    host: 'localhost',
+    database: 'Restaurant',
+    password: 'mysecretpassword',
     port: 5432,
-    ssl: false,
   }),
 };
-
-const pgClient = dbProvider.useValue.connect();
-pgClient.then(() => {
-  console.log("Connected")
-}).catch((err) => {
-  console.log("error" + err);
-})
 @Module({
   providers: [dbProvider],
   exports: [dbProvider],
