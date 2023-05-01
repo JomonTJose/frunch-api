@@ -53,11 +53,13 @@ describe('UserService', () => {
 
     const result = await userService.getRatedRestaurants(1);
 
-    const expectedQuery = `SELECT restaurants.restaurant_name , rr.rating, rr.review , rr.created_at 
-    FROM restaurants
-    INNER JOIN restaurant_reviews rr ON restaurants.id = rr.restuarant_id 
-    INNER JOIN users ON rr.user_id  = users.id 
-    WHERE rr.user_id =1;`;
+    const expectedQuery = `SELECT r.id, r.restaurant_name, AVG(rr.rating) AS average_rating, rr.review, r.res_image
+    FROM restaurants r
+    INNER JOIN restaurant_reviews rr ON r.id = rr.restuarant_id
+    INNER JOIN users u ON rr.user_id = u.id
+    WHERE u.id = 1
+    GROUP BY (r.id, rr.review)
+    ORDER BY average_rating DESC`;
     expect(mockConn.query).toHaveBeenCalledWith(expectedQuery);
     expect(result).toEqual(mockRows);
   });
